@@ -1,11 +1,13 @@
 import express from 'express';
 const router = express.Router();
 
+import {getAllAlunos} from '../controllers/AlunosController.js';
+
 //Create
 router.post('/'); 
 
 //Read
-router.get('/');
+router.get('/',getAllAlunos);
 router.get('/:id');
 
 //Update
