@@ -1,8 +1,8 @@
 import express from 'express';
-import authController from '../controllers/AuthController.js';
+import {generateToken} from '../controllers/AuthController.js';
 
 const router = express.Router();
 
-router.post('/', authController);
+router.post('/', generateToken);
 
 export default router;

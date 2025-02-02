@@ -1,7 +1,7 @@
 import GenericError from '../customErros/GenericError.js';
 
 const errorHandler = (err, req, res, next) => {
-    console.log("Dentro do md: " + err);
+    console.log("Error MiddleWare: " + err);
     if (err instanceof GenericError) {
         return res.status(err.status).json({ error: err.message });
     }

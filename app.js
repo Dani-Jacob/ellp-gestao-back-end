@@ -9,7 +9,7 @@ import alunosRoutes from './src/routes/AlunosRoutes.js';
 import authRoutes from './src/routes/AuthRoutes.js';
 
 //Middlewares
-import getErrorsMidleware from './src/middlewares/GetErrorsMidleware.js';
+import getErrorsMidleware from './src/middlewares/GetErrorsMiddleware.js';
 
 
 const app = express();

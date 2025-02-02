@@ -1,22 +1,32 @@
 import pool from '../config/db.js';
 import jwt from 'jsonwebtoken';
+import GenericError from '../customErros/GenericError.js';
+let secret = process.env.JWT_SECRET || 'default';
 
-function authentication(username, password) {
+async function authentication(username, password) {
 
     const query = {
-        text: 'SELECT * FROM users WHERE username = $1 AND password = $2',
+        text: 'SELECT * FROM voluntarios WHERE email = $1 AND senha = $2',
         values: [username, password]
     };
-    const rs = pool.query(query);
 
-    const queryPermissions = {
-        text: 'SELECT * FROM cargos_permissoes WHERE cargo_id = $1',
-        values: [rs[0].cargo_id]
-    };
+    let rs = await pool.query(query);
 
-    if (rs.length > 0) {
-        const permissions = pool.query(queryPermissions);
-        return tokenGeneration(rs[0].id, rs[0].username, permissions);
+    if (rs.rowCount > 0) {
+        const queryPermissions = {
+            text: `SELECT permissoes.id, permissoes.nome, permissoes.descricao
+                FROM permissoes
+                JOIN cargos_permissoes ON permissoes.id = cargos_permissoes.permissao_id
+                JOIN cargos ON cargos.id = cargos_permissoes.cargo_id
+                WHERE cargos.id = $1`,
+            values: [rs.rows[0].cargo_id]
+        };
+        const permissions = await pool.query(queryPermissions);
+        return{
+            id: rs.rows[0].id,
+            username: rs.rows[0].username,
+            permissions: permissions.rows.map(linha=> linha.nome)
+        }
     }
     return null;
 
@@ -30,19 +40,39 @@ function tokenGeneration(id, username, permissions) {
         permissions: permissions
     };
 
-    let secret = process.env.JWT_SECRET || 'default';
     let expiresIn = process.env.JWT_EXPIRES_IN || '1800s';
     return jwt.sign(payload, secret, { expiresIn: expiresIn });
 }
 
-const login = async (req, res, next) => {
+const generateToken = async (req, res, next) => {
     const { username, password } = req.body;
-
-    const token = authentication(username, password);
-    if (token == null) {
-        next(new CustomError(401, 'Credenciais inválidas.'));
+    const userData = await authentication(username,password);
+    if(userData){
+        let token = await tokenGeneration(userData.id, userData.username, userData.permissions)
+        return res.status(200).json({ token: token });
     }
-    res.status(200).json({ token });
+    return next(new GenericError(403, 'Credenciais inválidas!'));
 }
 
-export default login;
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if(authHeader){
+        const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+        if (token){
+            jwt.verify(token, secret, function(err, user) { 
+                if (err){ 
+                    return next(new GenericError(403, 'Acesso Negado!'));
+                }
+                req.user = user; 
+                console.log(req.user.permissions);
+                });
+            return next();
+        }
+    }
+    return next(new GenericError(401, 'Credenciais inválidas.'));
+}
+
+export {
+    generateToken,
+    authenticateToken
+}
