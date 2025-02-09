@@ -20,7 +20,12 @@ async function createResponsavel(req, res) {
     res.status(201).json(result.rows[0]); 
 }
 
-async function getResponsavelById(req, res, next) {
+async function getAllResponsaveis(req, res) {
+    const result = await pool.query('SELECT * FROM responsaveis');
+    res.status(200).json(result.rows[0]); 
+}
+
+async function getResponsavelById(req, res) {
     const { id } = req.params;
     const result = await pool.query('SELECT * FROM responsaveis WHERE id = $1', [id]);
     if (result.rows.length === 0) {
@@ -29,7 +34,7 @@ async function getResponsavelById(req, res, next) {
     res.status(200).json(result.rows[0]); 
 }
 
-async function updateResponsavel(req, res, next) {
+async function updateResponsavel(req, res) {
     const { id } = req.params;
     const { nome, telefone, cpf, email, tipo_parentesco } = req.body;
     const responsavel = await pool.query('SELECT * FROM responsaveis WHERE id = $1', [id]);
@@ -50,7 +55,7 @@ async function updateResponsavel(req, res, next) {
     res.status(200).json(result.rows[0]);
 }
 
-async function deleteResponsavel(req, res, next) {
+async function deleteResponsavel(req, res) {
     const { id } = req.params;
     const responsavel = await pool.query('SELECT * FROM responsaveis WHERE id = $1', [id]);
     if (responsavel.rows.length === 0) {
@@ -65,5 +70,6 @@ export{
     createResponsavel,
     getResponsavelById,
     updateResponsavel,
-    deleteResponsavel
+    deleteResponsavel,
+    getAllResponsaveis
 }

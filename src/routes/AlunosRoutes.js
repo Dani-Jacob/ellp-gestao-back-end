@@ -12,7 +12,7 @@ router.post('/', authenticateToken, checkPermission('create_alunos'), createAlun
 //Read
 router.get('/', authenticateToken, checkPermission('get_alunos'), getAllAlunos);
 router.get('/:id',authenticateToken, checkPermission('get_alunos'), getAlunoById);
-router.get('/:id/responsaveis', authenticateToken, checkPermission('get_alunos'),getResponsaveisByAluno);
+router.get('/:id/responsaveis', authenticateToken, checkPermission('get_alunos'), checkPermission("get_responsaveis"),getResponsaveisByAluno);
 
 //Update
 router.put('/:id',authenticateToken, checkPermission('update_alunos'), updateAluno);

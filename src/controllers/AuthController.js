@@ -1,18 +1,29 @@
 import pool from '../config/db.js';
 import jwt from 'jsonwebtoken';
 import GenericError from '../customErros/GenericError.js';
+import argon2 from 'argon2';
 let secret = process.env.JWT_SECRET || 'default';
+
+async function checkPassword(senhaRecebida, hashedPassword) {
+    const isMatch = await argon2.verify(hashedPassword, senhaRecebida);
+    if (isMatch) {
+        return true;
+    }
+    return false;
+}
+
 
 async function authentication(username, password) {
 
     const query = {
-        text: 'SELECT * FROM voluntarios WHERE email = $1 AND senha = $2',
-        values: [username, password]
+        text: 'SELECT * FROM voluntarios WHERE email = $1',
+        values: [username]
     };
 
     let rs = await pool.query(query);
 
-    if (rs.rowCount > 0) {
+    let senhaCorreta = await checkPassword(password,rs.rows[0].senha);
+    if (rs.rowCount > 0 && senhaCorreta) {
         const queryPermissions = {
             text: `SELECT permissoes.id, permissoes.nome, permissoes.descricao
                 FROM permissoes
@@ -29,7 +40,6 @@ async function authentication(username, password) {
         }
     }
     return null;
-
 }
 
 function tokenGeneration(id, username, permissions) {
