@@ -91,10 +91,10 @@ async function deleteAluno(req, res) {
 async function getResponsaveisByAluno(req, res) {
     const { id } = req.params;
     const result = await pool.query(`
-            SELECT r.*
-            FROM responsaveis r
-            JOIN alunos_responsaveis ar ON ar.responsavel_id = r.id
-            WHERE ar.aluno_id = $1
+            SELECT responsaveis.*
+            FROM responsaveis 
+            JOIN responsaveis_alunos  ON responsaveis_alunos.responsavel_id = responsaveis.id
+            WHERE responsaveis_alunos.aluno_id = $1
         `, [id]);
     if (result.rows.length === 0) {
         return res.status(404).json({ message: "Nenhum responsável encontrado para este aluno." });
