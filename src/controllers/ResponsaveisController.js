@@ -22,7 +22,7 @@ async function createResponsavel(req, res) {
 
 async function getAllResponsaveis(req, res) {
     const result = await pool.query('SELECT * FROM responsaveis');
-    res.status(200).json(result.rows[0]); 
+    res.status(200).json(result.rows); 
 }
 
 async function getResponsavelById(req, res) {
@@ -61,6 +61,7 @@ async function deleteResponsavel(req, res) {
     if (responsavel.rows.length === 0) {
         return res.status(404).json({ message: "Responsável não encontrado." });
     }
+    await pool.query('DELETE FROM responsaveis_alunos WHERE responsavel_id = $1', [id]);
     await pool.query('DELETE FROM responsaveis WHERE id = $1', [id]);
     res.status(200).json({ message: "Responsável deletado com sucesso." });
 }

@@ -12,18 +12,21 @@ import {
     getAllResponsaveis
 } from '../controllers/ResponsaveisController.js';
 
+import {IdValidator} from '../validators/GenericValidator.js';
+import responsavelValidator from '../validators/ResponsaveisValidator.js';
+
 //Create
-router.post('/', authenticateToken, checkPermission("create_responsaveis"), createResponsavel ); 
+router.post('/', authenticateToken, checkPermission("create_responsaveis"), responsavelValidator, createResponsavel ); 
 
 //Read
 router.get('/', authenticateToken, checkPermission("get_responsaveis"), getAllResponsaveis);
-router.get('/:id',authenticateToken, checkPermission("get_responsaveis"), getResponsavelById);
+router.get('/:id',authenticateToken, checkPermission("get_responsaveis"), IdValidator, getResponsavelById);
 
 //Update
-router.put('/:id',authenticateToken, checkPermission("update_responsaveis"), updateResponsavel);
+router.put('/:id',authenticateToken, checkPermission("update_responsaveis"), IdValidator, responsavelValidator, updateResponsavel);
 
 //Delete
-router.delete('/:id',authenticateToken, checkPermission("delete_responsaveis"), deleteResponsavel);
+router.delete('/:id',authenticateToken, checkPermission("delete_responsaveis"), IdValidator, deleteResponsavel);
 
 
 export default router;
