@@ -1,6 +1,7 @@
 import pool from '../config/db.js';
 import argon2 from 'argon2';
 
+
 async function createVoluntario(req, res) {
     const { nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
 
@@ -12,6 +13,16 @@ async function createVoluntario(req, res) {
     const existingEmail = await pool.query('SELECT * FROM voluntarios WHERE email = $1', [email]);
     if (existingEmail.rows.length > 0) {
         return res.status(400).json({ message: "Já existe um voluntário com esse e-mail." });
+    }
+
+    const existingCargo = await pool.query('SELECT * FROM cargos WHERE id = $1',[cargo_id]);
+    if (existingCargo.rows.length <= 0) {
+        return res.status(400).json({ message: "Cargo não existe." });
+    }
+
+    const existingDepartamento = await pool.query('SELECT * FROM departamentos WHERE id = $1',[id_departamento]);
+    if (existingDepartamento.rows.length <= 0) {
+        return res.status(400).json({ message: "Departamento não existe." });
     }
 
     const hashedPassword = await argon2.hash(senha, { type: argon2.argon2id });

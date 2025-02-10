@@ -1,7 +1,7 @@
 import pool from '../config/db.js';
 
 async function createResponsavel(req, res) {
-    const { nome, telefone, cpf, email, tipo_parentesco } = req.body;
+    const { nome, telefone, cpf, email, tipo_parentesco, id_aluno } = req.body;
     const existingResponsavel = await pool.query('SELECT * FROM responsaveis WHERE cpf = $1', [cpf]);
     if (existingResponsavel.rows.length > 0) {
         return res.status(400).json({ message: "Já existe um responsável com esse CPF." });
@@ -17,6 +17,11 @@ async function createResponsavel(req, res) {
             VALUES ($1, $2, $3, $4, $5) 
             RETURNING *
         `, [nome, telefone, cpf, email, tipo_parentesco]);
+    const result2 = await pool.query(
+        `
+        INSERT INTO responsaveis_alunos (responsavel_id, aluno_id)
+        VALUES(${result.rows[0].id},$1)
+        `, [id_aluno]);
     res.status(201).json(result.rows[0]); 
 }
 
