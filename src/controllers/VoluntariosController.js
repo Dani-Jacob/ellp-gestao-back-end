@@ -39,13 +39,27 @@ async function createVoluntario(req, res) {
 }
 
 async function getAllVoluntarios(req, res) {
-    const result = await pool.query('SELECT * FROM voluntarios');
+    const result = await pool.query(`SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
+       v.endereco, v.bairro, v.cep, v.senha, v.data_cadastro, 
+       c.id AS id_cargo, c.nome AS nome_cargo, 
+       d.id AS id_departamento, d.nome AS nome_departamento
+        FROM voluntarios v
+        LEFT JOIN cargos c ON v.cargo_id = c.id
+        LEFT JOIN departamentos d ON v.id_departamento = d.id;`);
     res.status(200).json(result.rows);
 }
 
 async function getVoluntarioById(req, res) {
     const { id } = req.params;
-    const result = await pool.query('SELECT * FROM voluntarios WHERE id = $1', [id]);
+    const result = await pool.query(`
+        SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
+       v.endereco, v.bairro, v.cep, v.senha, v.data_cadastro, 
+       c.id AS id_cargo, c.nome AS nome_cargo, 
+       d.id AS id_departamento, d.nome AS nome_departamento
+        FROM voluntarios v
+        LEFT JOIN cargos c ON v.cargo_id = c.id
+        LEFT JOIN departamentos d ON v.id_departamento = d.id
+        WHERE v.id = $1;`, [id]);
 
     if (result.rows.length === 0) {
         return res.status(404).json({ message: "Voluntário não encontrado." });
