@@ -25,6 +25,6 @@ router.put('/:id', authenticateToken, checkPermission('update_aulas'),IdValidato
 router.delete('/id', authenticateToken, checkPermission('delete_aulas'),IdValidator, deleteAula);
 
 //Obter todas as frenquecias na aula
-router.get('/:id/frequencia-alunos', authenticateToken, checkPermission('get_aulas'), checkPermission('get_alunos'), getFrequenciaAlunosByAula);
+router.get('/:id/frequencias-alunos', authenticateToken, checkPermission('get_aulas'), checkPermission('get_alunos'),IdValidator, getFrequenciaAlunosByAula);
 
 export default router

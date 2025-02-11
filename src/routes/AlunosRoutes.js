@@ -7,7 +7,7 @@ import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
 //Validacoes
 import {alunoValidator} from '../validators/AlunosValidator.js';
-import {IdValidator} from '../validators/GenericValidator.js';
+import {IdValidator, aulaIdValidator, oficinaIdValidator} from '../validators/GenericValidator.js';
 
 
 //Criar aluno
@@ -35,9 +35,9 @@ router.put('/:id',authenticateToken, checkPermission('update_alunos'), alunoVali
 router.delete('/:id',authenticateToken, checkPermission('delete_alunos'), IdValidator, deleteAluno);
 
 //Adicionar um aluno em uma oficina
-router.post('/:id/oficina/oficina_id', authenticateToken, checkPermission('create_alunos'), IdValidator ,addAlunoOficina); 
+router.post('/:id/oficina/oficina_id', authenticateToken, checkPermission('create_alunos'), IdValidator, oficinaIdValidator, addAlunoOficina); 
 
 //Adicionar frequencia de um aluno em uma aula
-router.post('/:id/frequencia-aula/:aula_id', authenticateToken, checkPermission('create_alunos'), IdValidator ,addFrequenciaAlunoAula); 
+router.post('/:id/frequencia-aula/:aula_id', authenticateToken, checkPermission('create_alunos'), IdValidator, aulaIdValidator, addFrequenciaAlunoAula); 
 
 export default router;

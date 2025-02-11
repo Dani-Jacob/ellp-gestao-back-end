@@ -18,8 +18,21 @@ const IdValidator = [
     validationResultMiddleware
 ];
 
+const aulaIdValidator = [
+    param('aula_id').isInt({ min: 0 }).withMessage('O ID deve ser um número inteiro positivo'),
+    
+    validationResultMiddleware
+];
+const oficinaIdValidator = [
+    param('oficina_id').isInt({ min: 0 }).withMessage('O ID deve ser um número inteiro positivo'),
+    
+    validationResultMiddleware
+];
+
 
 export {
     paginationValidator,
-    IdValidator
+    IdValidator,
+    aulaIdValidator,
+    oficinaIdValidator
 };
