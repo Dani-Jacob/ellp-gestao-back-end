@@ -1,9 +1,9 @@
 import express from 'express';
 const router = express.Router();
 
-import { getAllAulas, getAulaById, createAula, updateAula, deleteAula } from '../controllers/AulasController';
-import { authenticateToken } from '../controllers/AuthController';
-import checkPermission from '../middlewares/CheckPermissionMiddleware';
+import { getAllAulas, getAulaById, createAula, updateAula, deleteAula } from '../controllers/AulasController.js';
+import { authenticateToken } from '../controllers/AuthController.js';
+import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
 //create
 router.post('/', authenticateToken, checkPermission('create_aulas'), createAula);
