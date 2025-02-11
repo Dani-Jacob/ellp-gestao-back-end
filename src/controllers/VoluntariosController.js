@@ -68,7 +68,6 @@ async function getVoluntarioById(req, res) {
     res.status(200).json(result.rows[0]);
 }
 
-
 async function updateVoluntario(req, res) {
     const { id } = req.params;
     const { nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;

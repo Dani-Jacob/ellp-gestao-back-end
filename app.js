@@ -13,7 +13,7 @@ import oficinasRoutes from './src/routes/OficinasRoutes.js';
 import aulasRoutes from './src/routes/AulasRoutes.js';
 import cargosRoutes from './src/routes/CargosRoutes.js';
 import departamentosRoutes from './src/routes/DepartamentosRoutes.js';
-
+import atividadesRoutes from './src/routes/AtividadesRoutes.js';
 //Middlewares
 import getErrorsMidleware from './src/middlewares/GetErrorsMiddleware.js';
 
@@ -33,6 +33,7 @@ app.use('/oficinas', oficinasRoutes);
 app.use('/aulas', aulasRoutes);
 app.use('/cargos', cargosRoutes);
 app.use('/departamentos', departamentosRoutes);
+app.use('/atividades', atividadesRoutes);
 
 
 

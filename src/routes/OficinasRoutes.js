@@ -12,11 +12,11 @@ import {IdValidator} from '../validators/GenericValidator.js';
 router.post('/', authenticateToken, checkPermission('create_oficinas'),oficinasValidator, createOficina);
 
 //Adicionar aluno ou alunos a oficina
-router.post('/:id',authenticateToken, checkPermission('create_oficinas'), checkPermission('create_alunos'), addAlunosOficina);
+router.post('/:id',authenticateToken, checkPermission('create_oficinas'), checkPermission('create_alunos'), IdValidator, addAlunosOficina);
 
 //read
 router.get('/', authenticateToken, checkPermission('get_oficinas'), getAllOficinas);
-router.get('/:id', authenticateToken, checkPermission('get_oficinas'), IdValidatorgetOficinaById);
+router.get('/:id', authenticateToken, checkPermission('get_oficinas'), IdValidator, getOficinaById);
 
 //update
 router.put('/:id', authenticateToken, checkPermission('update_oficinas'),oficinasValidator, IdValidator, updateOficina);
