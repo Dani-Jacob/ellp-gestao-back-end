@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-import { getAllAtividades, getAtividadeById, createAtividade, updateAtividade, deleteAtividade, updateFrequenciasAtividade } from '../controllers/AtividadesController.js';
+import { getAllAtividades, getAtividadeById, createAtividade, updateAtividade, deleteAtividade } from '../controllers/AtividadesController.js';
 import { authenticateToken } from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
@@ -11,7 +11,6 @@ import {IdValidator} from '../validators/GenericValidator.js';
 // Create
 router.post('/', authenticateToken, checkPermission('create_atividades'), atividadesValidator, createAtividade);
 
-router.post('/:id/frequencia', authenticateToken, checkPermission('create_atividades'), IdValidator, voluntariosIdValidator, updateFrequenciasAtividade);
 
 // Read
 router.get('/', authenticateToken, checkPermission('get_atividades'), getAllAtividades);

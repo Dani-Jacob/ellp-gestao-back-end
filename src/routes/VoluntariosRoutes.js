@@ -8,7 +8,9 @@ import {
     getVoluntarioById,
     updateVoluntario,
     deleteVoluntario,
-    getAllVoluntarios
+    getAllVoluntarios,
+    addFrequenciaVoluntarioAtividade,
+    addFrequenciaVoluntarioAula
 } from '../controllers/VoluntariosController.js';
 
 import { IdValidator } from '../validators/GenericValidator.js';
@@ -26,5 +28,9 @@ router.put('/:id', authenticateToken, checkPermission("update_voluntarios"), IdV
 
 // Delete
 router.delete('/:id', authenticateToken, checkPermission("delete_voluntarios"), IdValidator, deleteVoluntario);
+
+//Frequencias
+router.post('/:id/frequencia-atividade/:id_atividade', authenticateToken, checkPermission("create_voluntarios"), IdValidator, addFrequenciaVoluntarioAtividade);
+router.post('/:id/frequencia-aula/:id_aula', authenticateToken, checkPermission("create_voluntarios"), IdValidator, addFrequenciaVoluntarioAula);
 
 export default router;

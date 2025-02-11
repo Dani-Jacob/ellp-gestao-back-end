@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-import { getAllOficinas, getOficinaById, createOficina, updateOficina, deleteOficina, addAlunosOficina } from '../controllers/OficinasController.js';
+import { getAllOficinas, getOficinaById, createOficina, updateOficina, deleteOficina } from '../controllers/OficinasController.js';
 import { authenticateToken } from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
@@ -11,8 +11,6 @@ import {IdValidator} from '../validators/GenericValidator.js';
 //create
 router.post('/', authenticateToken, checkPermission('create_oficinas'),oficinasValidator, createOficina);
 
-//Adicionar aluno ou alunos a oficina
-router.post('/:id',authenticateToken, checkPermission('create_oficinas'), checkPermission('create_alunos'), IdValidator, addAlunosOficina);
 
 //read
 router.get('/', authenticateToken, checkPermission('get_oficinas'), getAllOficinas);

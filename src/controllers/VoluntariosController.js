@@ -113,10 +113,56 @@ async function deleteVoluntario(req, res) {
     res.status(200).json({ message: "Voluntário deletado com sucesso." });
 }
 
+async function addFrequenciaVoluntarioAtividade(req, res) {
+    const { id, id_atividade } = req.params;
+
+    const voluntario = await pool.query('SELECT * FROM voluntarios WHERE id = $1', [id]);
+    if (voluntario.rows.length === 0) {
+        return res.status(404).json({ message: "Voluntário não encontrado." });
+    }
+
+    const atividade = await pool.query('SELECT * FROM atividade WHERE id = $1', [id_atividade]);
+    if (atividade.rows.length === 0) {
+        return res.status(404).json({ message: "Atividade não encontrada." });
+    }
+
+    const rs = await pool.query(`
+        INSERT INTO frequencia_voluntarios_atividades (voluntario_id, atividade_id)
+        VALUES ($1,$2)
+        `,[id,id_atividade]);
+        	
+    res.status(201).json({ message: "Frequência registrada com sucesso!"});
+}
+
+
+
+async function addFrequenciaVoluntarioAula(req, res) {
+    const { id, id_aula } = req.params;
+
+    const voluntario = await pool.query('SELECT * FROM voluntarios WHERE id = $1', [id]);
+    if (voluntario.rows.length === 0) {
+        return res.status(404).json({ message: "Voluntário não encontrado." });
+    }
+
+    const atividade = await pool.query('SELECT * FROM aula WHERE id = $1', [id_aula]);
+    if (atividade.rows.length === 0) {
+        return res.status(404).json({ message: "Aula não encontrada." });
+    }
+
+    const rs = await pool.query(`
+        INSERT INTO frequencia_voluntarios_aulas (voluntario_id, aula_id)
+        VALUES ($1,$2)
+        `,[id,id_aula]);
+        	
+    res.status(201).json({ message: "Frequência registrada com sucesso!"});
+}
+
 export {
     createVoluntario,
     getVoluntarioById,
     updateVoluntario,
     deleteVoluntario,
-    getAllVoluntarios
+    getAllVoluntarios,
+    addFrequenciaVoluntarioAtividade,
+    addFrequenciaVoluntarioAula
 };

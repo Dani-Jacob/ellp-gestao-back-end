@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-import {getAllAlunos, getAlunoById, updateAluno, deleteAluno, createAluno, getResponsaveisByAluno} from '../controllers/AlunosController.js';
+import {getAllAlunos, getAlunoById, updateAluno, deleteAluno, createAluno, getResponsaveisByAluno, getRespostasByAluno} from '../controllers/AlunosController.js';
 import {authenticateToken} from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
@@ -17,6 +17,8 @@ router.post('/', authenticateToken, checkPermission('create_alunos'), alunoValid
 router.get('/', authenticateToken, checkPermission('get_alunos'), getAllAlunos);
 router.get('/:id',authenticateToken, checkPermission('get_alunos'), IdValidator, getAlunoById);
 router.get('/:id/responsaveis', authenticateToken, checkPermission('get_alunos'), checkPermission("get_responsaveis"), IdValidator, getResponsaveisByAluno);
+
+router.get('/:id/respostas', authenticateToken, checkPermission('get_alunos'), checkPermission("get_respostas"), IdValidator, getRespostasByAluno);
 
 //Update
 router.put('/:id',authenticateToken, checkPermission('update_alunos'), alunoValidator, updateAluno);

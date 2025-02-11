@@ -102,7 +102,27 @@ async function getResponsaveisByAluno(req, res) {
     res.status(200).json(result.rows);
 }
 
-
+async function getRespostasByAluno(req, res) {
+    const { id } = req.params;
+    const result = await pool.query(`
+        SELECT 
+            r.id, 
+            r.aluno_id, 
+            r.pergunta_id, 
+            r.resposta_texto, 
+            r.data_resposta, 
+            p.texto
+        FROM 
+            respostas r
+        JOIN 
+            perguntas p ON r.pergunta_id = p.id
+        WHERE r.aluno_id = 1
+        `, [id]);
+    if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Nenhuma resposta encontrada para este aluno." });
+    }
+    res.status(200).json(result.rows);
+}
 
 export {
     getAllAlunos,
@@ -110,5 +130,6 @@ export {
     updateAluno,
     deleteAluno,
     createAluno,
-    getResponsaveisByAluno
+    getResponsaveisByAluno,
+    getRespostasByAluno
 }

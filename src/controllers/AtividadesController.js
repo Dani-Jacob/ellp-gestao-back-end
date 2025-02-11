@@ -87,38 +87,11 @@ async function deleteAtividade(req, res) {
     res.status(200).json({ message: 'Atividade deletada com sucesso' });
 }
 
-async function updateFrequenciasAtividade(req, res) {
-    const { id } = req.params;
-    const { voluntarios_id } = req.body;
-
-    const atividade = await pool.query('SELECT * FROM atividades WHERE id = $1', [id]);
-    if (atividade.rows.length === 0) {
-        return res.status(404).json({ message: 'Atividade não encontrada' });
-    }
-
-    for (let voluntario_id of voluntarios_id) {
-        const voluntario = await pool.query('SELECT * FROM voluntarios WHERE id = $1', [voluntario_id]);
-        if (voluntario.rows.length === 0) {
-            return res.status(404).json({ message: 'Voluntário ' + voluntario_id +' não encontrado' });
-        }
-    }
-
-    for (let voluntario_id of voluntarios_id) {
-        await pool.query(`
-                INSERT INTO frequencia_voluntarios_atividades (voluntario_id, atividade_id) 
-                VALUES ($1, $2) 
-            `, [voluntario_id, id]);
-    }
-    return res.status(201).json({ message: "Frequência de voluntários registrada com sucesso à atividade." });
-
-}
-
 
 export {
     createAtividade,
     getAllAtividades,
     getAtividadeById,
     updateAtividade,
-    deleteAtividade,
-    updateFrequenciasAtividade
+    deleteAtividade
 };
