@@ -1,136 +1,91 @@
 import pool from '../config/db.js';
 
-//Create
-async function createAluno(req, res) {
-    const { nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao } = req.body;
-    const existingAluno = await pool.query('SELECT * FROM alunos WHERE cpf = $1', [cpf]);
+import {
+    getAlunoByCpfModel, 
+    getAlunoByIdModel, 
+    createAlunoModel, 
+    getAllAlunosModel, 
+    updateAlunoModel, 
+    deleteAlunoModel, 
+    getResponsaveisByAlunoModel, 
+    getRespostasByAlunoModel, 
+    addAlunoOficinaModel,
+    addFrequenciaAlunoAulaModel,
+    getFrequenciasAulasByAlunoModel
+} from '../models/AlunosModels.js';
 
-    if (existingAluno.rows.length > 0) {
+async function createAluno(req, res) { //OK
+    const { nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao } = req.body;
+
+    //Verifica se existe um aluno com esse cpf
+    if((await getAlunoByCpfModel(cpf)).length > 0) {
         return res.status(400).json({ message: "Já existe um aluno com esse CPF." });
-    }
-    const result = await pool.query(`
-            INSERT INTO alunos (
-                nome, 
-                data_nascimento, 
-                ano_escolar, 
-                escola, 
-                cpf, 
-                ativo, 
-                necessidades_especiais, 
-                endereco, 
-                bairro, 
-                cep, 
-                observacao
-            ) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
-            RETURNING *
-        `, [nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao]);
+    };
+
+    //Cria o aluno
+    let result = await createAlunoModel(nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao);
 
     res.status(201).json(result.rows[0]);
 }
 
-//Read
-async function getAllAlunos(req, res) {
-    const result = await pool.query('SELECT * FROM alunos');
+async function getAllAlunos(req, res) { //OK
+    const result = await getAllAlunosModel();
     res.status(200).json(result.rows);
 };
 
-async function getAlunoById(req, res) {
+async function getAlunoById(req, res) { //OK
     const { id } = req.params;
-    const result = await pool.query('SELECT * FROM alunos WHERE ID = $1', [id]);
-
-    if (result.rows.length === 0) {
+    let result = await getAlunoByIdModel(id);
+    if (result.rows.length == 0) {
         return res.status(404).json({ message: "Aluno não encontrado." });
     }
     res.status(200).json(result.rows[0]);
 }
 
-//Update
-async function updateAluno(req, res) {
+async function updateAluno(req, res) {//OK
     const { id } = req.params;
     const { nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao } = req.body;
 
-    const aluno = await pool.query('SELECT * FROM alunos WHERE id = $1', [id]);
-    if (aluno.rows.length === 0) {
+    if (await getAlunoByIdModel(id) === 0) {
         return res.status(404).json({ message: "Aluno não encontrado." });
     }
-    const result = await pool.query(`
-            UPDATE alunos
-            SET 
-                nome = $1,
-                data_nascimento = $2,
-                ano_escolar = $3,
-                escola = $4,
-                cpf = $5,
-                ativo = $6,
-                necessidades_especiais = $7,
-                endereco = $8,
-                bairro = $9,
-                cep = $10,
-                observacao = $11
-            WHERE id = $12
-            RETURNING *
-        `, [nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao, id]);
 
+    const result = await updateAlunoModel(id,nome, data_nascimento, ano_escolar, escola, cpf, ativo, necessidades_especiais, endereco, bairro, cep, observacao);
     res.status(200).json(result.rows[0]);
 }
 
-//Delete
-async function deleteAluno(req, res) {
+async function deleteAluno(req, res) { //OK
     const { id } = req.params;
-    const aluno = await pool.query('SELECT * FROM alunos WHERE id = $1', [id]);
-    if (aluno.rows.length === 0) {
+    if ((await getAlunoByIdModel(id)).rows.length == 0) {
         return res.status(404).json({ message: "Aluno não encontrado." });
     }
-    await pool.query('DELETE FROM alunos WHERE id = $1', [id]);
+    const result = await deleteAlunoModel(id);
 
-    res.status(200).json({ message: "Aluno deletado com sucesso." });
+    return res.status(200).json({ message: "Aluno deletado com sucesso." });
 };
 
-
-async function getResponsaveisByAluno(req, res) {
+async function getResponsaveisByAluno(req, res) { //OK
     const { id } = req.params;
-    const result = await pool.query(`
-            SELECT responsaveis.*
-            FROM responsaveis 
-            JOIN responsaveis_alunos  ON responsaveis_alunos.responsavel_id = responsaveis.id
-            WHERE responsaveis_alunos.aluno_id = $1
-        `, [id]);
-    if (result.rows.length === 0) {
-        return res.status(404).json({ message: "Nenhum responsável encontrado para este aluno." });
+    if ((await getAlunoByIdModel(id)).rows.length == 0) {
+        return res.status(404).json({ message: "Aluno não encontrado." });
     }
+    const result = await getResponsaveisByAlunoModel(id);
     res.status(200).json(result.rows);
 }
 
-async function getRespostasByAluno(req, res) {
+async function getRespostasByAluno(req, res) { //OK
     const { id } = req.params;
-    const result = await pool.query(`
-        SELECT 
-            r.id, 
-            r.aluno_id, 
-            r.pergunta_id, 
-            r.resposta_texto, 
-            r.data_resposta, 
-            p.texto
-        FROM 
-            respostas r
-        JOIN 
-            perguntas p ON r.pergunta_id = p.id
-        WHERE r.aluno_id = 1
-        `, [id]);
-    if (result.rows.length === 0) {
-        return res.status(404).json({ message: "Nenhuma resposta encontrada para este aluno." });
+    if ((await getAlunoByIdModel(id)).rows.length == 0) {
+        return res.status(404).json({ message: "Aluno não encontrado." });
     }
+    const result = await getRespostasByAlunoModel(id);
     res.status(200).json(result.rows);
 }
 
-
-
-async function addAlunoOficina(req, res) {
+async function addAlunoOficina(req, res) { //Falta model de oficina
     const { id, oficina_id } = req.params;
     
-    const result = await pool.query('SELECT * FROM alunos WHERE ID = $1', [id]);
-    if (result.rows.length === 0) {
+    if (getAlunoByIdModel(id).length === 0) {
         return res.status(404).json({ message: "Aluno não encontrado." });
     }
 
@@ -139,16 +94,15 @@ async function addAlunoOficina(req, res) {
         return res.status(404).json({ message: "Oficina não encontrada." });
     }
 
-    const result3 = await pool.query('INSERT INTO oficinas_alunos (oficina_id, aluno_id) VALUES($1,$2)', [oficina_id,id]);
+    const result3 = await addAlunoOficinaModel(id, oficina_id);
 
     res.status(201).json({"message": "Aluno adicionado na oficina com sucesso!"});
 }
 
-async function addFrequenciaAlunoAula(req, res) {
+async function addFrequenciaAlunoAula(req, res) { // Falta model de aulas
     const { id, aula_id } = req.params;
     
-    const result = await pool.query('SELECT * FROM alunos WHERE ID = $1', [id]);
-    if (result.rows.length === 0) {
+    if ((await getAlunoByIdModel(id)).rows.length === 0) {
         return res.status(404).json({ message: "Aluno não encontrado." });
     }
 
@@ -157,11 +111,21 @@ async function addFrequenciaAlunoAula(req, res) {
         return res.status(404).json({ message: "Oficina não encontrada." });
     }
 
-    const result3 = await pool.query('INSERT INTO frequencia_alunos_aulas (aluno_id, aula_id) VALUES($1,$2)', [id, aula_id]);
+    const result3 = await addFrequenciaAlunoAulaModel(id, aula_id)
 
     res.status(201).json({"message": "Aluno adicionado na aula com sucesso!"});
 }
 
+async function getFrequenciasAulasByAluno(req, res) {
+    const { id } = req.params;
+    
+    if ((await getAlunoByIdModel(id)).rows.length == 0) {
+        return res.status(404).json({ message: "Aluno não encontrado." });
+    }
+
+    const result2 = await getFrequenciasAulasByAlunoModel(id);
+    res.status(200).json(result2.rows);
+}
 
 
 export {
@@ -173,5 +137,6 @@ export {
     getResponsaveisByAluno,
     getRespostasByAluno,
     addAlunoOficina,
-    addFrequenciaAlunoAula
+    addFrequenciaAlunoAula,
+    getFrequenciasAulasByAluno
 }
