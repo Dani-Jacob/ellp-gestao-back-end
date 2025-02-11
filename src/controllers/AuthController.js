@@ -21,7 +21,10 @@ async function authentication(username, password) {
     };
 
     let rs = await pool.query(query);
-    if(rs.rowCount <= 0) { return null;};
+
+    if(rs.rowCount <= 0) { 
+        return null;
+    };
     let senhaCorreta = await checkPassword(password,rs.rows[0].senha);
     if (rs.rowCount > 0 && senhaCorreta) {
         const queryPermissions = {
@@ -56,12 +59,15 @@ function tokenGeneration(id, username, permissions) {
 
 const generateToken = async (req, res, next) => {
     const { username, password } = req.body;
+    if(!username || !password){
+        return next(new GenericError(401, 'Credenciais inválidas.'));
+    }
     const userData = await authentication(username,password);
     if(userData){
         let token = await tokenGeneration(userData.id, userData.username, userData.permissions)
         return res.status(200).json({ token: token });
     }
-    return next(new GenericError(403, 'Credenciais inválidas!'));
+    return next(new GenericError(403, 'Acesso Negado!'));
 }
 
 const authenticateToken = (req, res, next) => {
