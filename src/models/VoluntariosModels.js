@@ -25,14 +25,14 @@ async function getVoluntarioByEmailModel(email) {
     return result;
 }
 
-async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento) {
+async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento) {
     const result = await pool.query(`
         INSERT INTO voluntarios (
-            nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento
+            nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING *
-    `, [nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, hashedPassword, cargo_id, id_departamento]);
+    `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento]);
 
     return result;
 }
@@ -50,7 +50,7 @@ async function getAllVoluntariosModel() {
 
 
 
-async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento) {
+async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento) {
     const result = await pool.query(`
         UPDATE voluntarios
         SET 
@@ -60,15 +60,16 @@ async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, e
             cpf = $4,
             email = $5,
             curso = $6,
-            endereco = $7,
-            bairro = $8,
-            cep = $9,
-            senha = $10,
-            cargo_id = $11,
-            id_departamento = $12
-        WHERE id = $13
+            ativo = $7
+            endereco = $8,
+            bairro = $9,
+            cep = $10,
+            senha = $11,
+            cargo_id = $12,
+            id_departamento = $13
+        WHERE id = $14
         RETURNING *
-    `, [nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento, id]);
+    `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento, id]);
 
     return result;
 }

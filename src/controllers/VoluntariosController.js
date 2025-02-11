@@ -14,7 +14,7 @@ import {
 } from '../models/VoluntariosModels.js';
 
 async function createVoluntario(req, res) {
-    const { nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
+    const { nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
 
     if ((await getVoluntarioByCpfModel(cpf)).rows.length > 0) {
         return res.status(400).json({ message: "Já existe um voluntário com esse CPF." });
@@ -36,7 +36,7 @@ async function createVoluntario(req, res) {
 
     const hashedPassword = await argon2.hash(senha, { type: argon2.argon2id });
 
-    const result = await createVoluntarioModel(nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, hashedPassword, cargo_id, id_departamento);
+    const result = await createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, hashedPassword, cargo_id, id_departamento);
 
     res.status(201).json(result.rows[0]);
 }
@@ -58,13 +58,13 @@ async function getVoluntarioById(req, res) {
 
 async function updateVoluntario(req, res) {
     const { id } = req.params;
-    const { nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
+    const { nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
 
     if ((await getVoluntarioById(id)).rows.length === 0) {
         return res.status(404).json({ message: "Voluntário não encontrado." });
     }
 
-    const result = await updateVoluntarioModel(id, nome, ra, telefone, cpf, email, curso, endereco, bairro, cep, senha, cargo_id, id_departamento, id);
+    const result = await updateVoluntarioModel(id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento, id);
 
     res.status(200).json(result.rows[0]);
 }

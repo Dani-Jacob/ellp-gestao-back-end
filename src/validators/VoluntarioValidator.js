@@ -27,6 +27,8 @@ const voluntarioValidator = [
     .notEmpty().withMessage('Curso é obrigatório.')
     .isLength({ max: 100 }).withMessage('Curso não pode ter mais que 100 caracteres.'),
 
+  body('ativo')
+    .isBoolean().withMessage('O campo ativo deve ser um valor booleano'),
   body('endereco')
     .notEmpty().withMessage('Endereço é obrigatório.')
     .isLength({ max: 100 }).withMessage('Endereço não pode ter mais que 100 caracteres.'),

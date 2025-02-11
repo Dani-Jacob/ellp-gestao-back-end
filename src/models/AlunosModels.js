@@ -63,6 +63,8 @@ async function updateAlunoModel(id, nome, data_nascimento, ano_escolar, escola, 
 
 //Delete
 async function deleteAlunoModel(id) {
+    await pool.query('DELETE FROM responsaveis_alunos WHERE aluno_id = $1',[id]);
+    await pool.query('DELETE FROM frequencia_alunos_aulas WHERE aluno_id = $1',[id]);
     await pool.query('DELETE FROM alunos WHERE id = $1', [id]);
     return id;
 };
