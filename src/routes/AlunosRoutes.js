@@ -6,7 +6,7 @@ import {authenticateToken} from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
 //Validacoes
-import {alunoValidator} from '../validators/AlunoValidator.js';
+import {alunoValidator} from '../validators/AlunosValidator.js';
 import {IdValidator} from '../validators/GenericValidator.js';
 
 

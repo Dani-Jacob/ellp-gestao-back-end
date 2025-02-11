@@ -2,7 +2,7 @@ import pool from '../config/db.js';
 
 // create
 async function createOficina(req,res){
-    const {nome, ano, periodo, professor, turno, ativo, data_cadastro} = req.body;
+    const {nome, ano, periodo, professor, turno, ativo} = req.body;
     const existingOficina = await pool.query('SELECT * FROM oficinas WHERE nome = $1', [nome]);
 
     if (existingOficina.rows.length > 0) {
@@ -18,9 +18,9 @@ async function createOficina(req,res){
             ativo, 
             data_cadastro 
         ) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) 
+        VALUES ($1, $2, $3, $4, $5, $6) 
         RETURNING *
-    `, [nome, ano, periodo, professor, turno, ativo, data_cadastro]);
+    `, [nome, ano, periodo, professor, turno, ativo]);
 
     res.status(201).json(result.rows[0]);
 }
@@ -63,7 +63,7 @@ async function getOficinaById(req, res) {
 // update
 async function updateOficina(req, res){
     const {id} = req.params;
-    const {nome, ano, periodo, professor, turno, ativo, data_cadastro} = req.body;
+    const {nome, ano, periodo, professor, turno, ativo} = req.body;
 
     const oficina = await pool.query('SELECT * FROM oficinas WHERE id = $1', [id]);
     if (oficina.rows.length === 0){
@@ -78,10 +78,9 @@ async function updateOficina(req, res){
             professor = $4,
             turno = $5,
             ativo = $6,
-            data_cadastro = $7,
-        WHERE id = $8
+        WHERE id = $7
         RETURNING *
-    `, [nome, ano, periodo, professor, turno, ativo, data_cadastro,  id]);
+    `, [nome, ano, periodo, professor, turno, ativo,  id]);
 
     res.status(200).json(result.rows[0]);
 }
