@@ -10,27 +10,34 @@ import {alunoValidator} from '../validators/AlunosValidator.js';
 import {IdValidator} from '../validators/GenericValidator.js';
 
 
-//Create
+//Criar aluno
 router.post('/', authenticateToken, checkPermission('create_alunos'), alunoValidator ,createAluno); 
 
-//Read
+//Obter todos os alunos
 router.get('/', authenticateToken, checkPermission('get_alunos'), getAllAlunos);
+
+//Obter aluno por ID
 router.get('/:id',authenticateToken, checkPermission('get_alunos'), IdValidator, getAlunoById);
 
+//Obter responsaveis do aluno
 router.get('/:id/responsaveis', authenticateToken, checkPermission('get_alunos'), checkPermission("get_responsaveis"), IdValidator, getResponsaveisByAluno);
+
+//Obter respostas socio economicas do aluno
 router.get('/:id/respostas', authenticateToken, checkPermission('get_alunos'), checkPermission("get_respostas"), IdValidator, getRespostasByAluno);
+
+//Obter frequencia do aluno nas aulas
 router.get('/:id/frequencia-aulas', authenticateToken, checkPermission('get_alunos'), checkPermission("get_respostas"), IdValidator, getFrequenciasAulasByAluno);
 
-//Update
+//Atualizar os dados de um aluno
 router.put('/:id',authenticateToken, checkPermission('update_alunos'), alunoValidator, updateAluno);
 
-//Delete
+//Deletar um aluno
 router.delete('/:id',authenticateToken, checkPermission('delete_alunos'), IdValidator, deleteAluno);
 
-//Adicionar na oficina
+//Adicionar um aluno em uma oficina
 router.post('/:id/oficina/oficina_id', authenticateToken, checkPermission('create_alunos'), IdValidator ,addAlunoOficina); 
 
-//Adicionar frequencia
+//Adicionar frequencia de um aluno em uma aula
 router.post('/:id/frequencia-aula/:aula_id', authenticateToken, checkPermission('create_alunos'), IdValidator ,addFrequenciaAlunoAula); 
 
 export default router;
