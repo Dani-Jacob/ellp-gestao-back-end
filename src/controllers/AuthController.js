@@ -21,7 +21,7 @@ async function authentication(username, password) {
     };
 
     let rs = await pool.query(query);
-
+    if(rs.rowCount <= 0) { return null;};
     let senhaCorreta = await checkPassword(password,rs.rows[0].senha);
     if (rs.rowCount > 0 && senhaCorreta) {
         const queryPermissions = {

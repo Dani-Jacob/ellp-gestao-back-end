@@ -1,5 +1,6 @@
 import express, { json, urlencoded } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors'
 dotenv.config();  
 
 import db from './src/config/db.js'; 
@@ -20,6 +21,10 @@ import getErrorsMidleware from './src/middlewares/GetErrorsMiddleware.js';
 
 const app = express();
 
+app.use(cors({
+    origin: '*', // Permite requisições do frontend
+    credentials: true, // Permite o envio de cookies e headers de autenticação
+  }));
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
