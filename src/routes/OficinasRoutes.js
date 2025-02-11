@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-import { getAllOficinas, getOficinaById, createOficina, updateOficina, deleteOficina } from '../controllers/OficinasController.js';
+import { getAllOficinas, getOficinaById, createOficina, updateOficina, deleteOficina, getAulasByOficina } from '../controllers/OficinasController.js';
 import { authenticateToken } from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
@@ -15,6 +15,10 @@ router.post('/', authenticateToken, checkPermission('create_oficinas'),oficinasV
 //read
 router.get('/', authenticateToken, checkPermission('get_oficinas'), getAllOficinas);
 router.get('/:id', authenticateToken, checkPermission('get_oficinas'), IdValidator, getOficinaById);
+
+router.get('/:id/aulas', authenticateToken, checkPermission('get_oficinas'), IdValidator, getAulasByOficina);
+
+
 
 //update
 router.put('/:id', authenticateToken, checkPermission('update_oficinas'),oficinasValidator, IdValidator, updateOficina);

@@ -124,6 +124,46 @@ async function getRespostasByAluno(req, res) {
     res.status(200).json(result.rows);
 }
 
+
+
+async function addAlunoOficina(req, res) {
+    const { id, oficina_id } = req.params;
+    
+    const result = await pool.query('SELECT * FROM alunos WHERE ID = $1', [id]);
+    if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Aluno não encontrado." });
+    }
+
+    const result2 = await pool.query('SELECT * FROM oficinas WHERE id = $1', [oficina_id]);
+    if (result2.rows.length === 0) {
+        return res.status(404).json({ message: "Oficina não encontrada." });
+    }
+
+    const result3 = await pool.query('INSERT INTO oficinas_alunos (oficina_id, aluno_id) VALUES($1,$2)', [oficina_id,id]);
+
+    res.status(201).json({"message": "Aluno adicionado na oficina com sucesso!"});
+}
+
+async function addFrequenciaAlunoAula(req, res) {
+    const { id, aula_id } = req.params;
+    
+    const result = await pool.query('SELECT * FROM alunos WHERE ID = $1', [id]);
+    if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Aluno não encontrado." });
+    }
+
+    const result2 = await pool.query('SELECT * FROM aulas WHERE id = $1', [aula_id]);
+    if (result2.rows.length === 0) {
+        return res.status(404).json({ message: "Oficina não encontrada." });
+    }
+
+    const result3 = await pool.query('INSERT INTO frequencia_alunos_aulas (aluno_id, aula_id) VALUES($1,$2)', [id, aula_id]);
+
+    res.status(201).json({"message": "Aluno adicionado na aula com sucesso!"});
+}
+
+
+
 export {
     getAllAlunos,
     getAlunoById,
@@ -131,5 +171,7 @@ export {
     deleteAluno,
     createAluno,
     getResponsaveisByAluno,
-    getRespostasByAluno
+    getRespostasByAluno,
+    addAlunoOficina,
+    addFrequenciaAlunoAula
 }

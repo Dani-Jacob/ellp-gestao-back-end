@@ -80,11 +80,16 @@ async function deleteOficina(req, res) {
     res.status(200).json({ message: "Oficina deletada com sucesso." });
 }
 
+async function getAulasByOficina(req,res) {
+    const result = await pool.query('SELECT * FROM aulas where oficina_id = $1');
+    res.status(200).json(result.rows);
+}
+
 export{
     createOficina,
     getAllOficinas,
     getOficinaById,
     deleteOficina,
     updateOficina,
-    addAlunosOficina
+    getAulasByOficina
 }
