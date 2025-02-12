@@ -5,7 +5,7 @@ async function getVoluntarioByIdModel(id) {
     const result = await pool.query(`
         SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
        v.endereco, v.bairro, v.cep, v.data_cadastro, 
-       c.id AS id_cargo, c.nome AS nome_cargo, 
+       c.id AS cargo_id, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
         FROM voluntarios v
         LEFT JOIN cargos c ON v.cargo_id = c.id
@@ -74,7 +74,7 @@ async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativ
 async function getAllVoluntariosModel() {
     const result = await pool.query(`SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
        v.endereco, v.bairro, v.cep, v.data_cadastro, 
-       c.id AS id_cargo, c.nome AS nome_cargo, 
+       c.id AS cargo_id, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
         FROM voluntarios v
         LEFT JOIN cargos c ON v.cargo_id = c.id
