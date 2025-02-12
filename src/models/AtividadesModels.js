@@ -5,7 +5,7 @@ import pool from '../config/db.js';
 async function getAtividadeByNomeAndDataModel(nome,data) {
     const result = await pool.query(
         'SELECT * FROM atividades WHERE data_atividade = $1 AND nome = $2',
-        [data_atividade, nome]
+        [data, nome]
     );
     return result;
 }

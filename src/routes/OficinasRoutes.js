@@ -18,8 +18,6 @@ router.get('/:id', authenticateToken, checkPermission('get_oficinas'), IdValidat
 
 router.get('/:id/aulas', authenticateToken, checkPermission('get_oficinas'), IdValidator, getAulasByOficina);
 
-
-
 //update
 router.put('/:id', authenticateToken, checkPermission('update_oficinas'),oficinasValidator, IdValidator, updateOficina);
 

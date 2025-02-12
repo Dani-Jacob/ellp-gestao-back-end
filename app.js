@@ -40,8 +40,6 @@ app.use('/cargos', cargosRoutes);
 app.use('/departamentos', departamentosRoutes);
 app.use('/atividades', atividadesRoutes);
 
-
-
 app.use(getErrorsMidleware);
 
 export default app;
