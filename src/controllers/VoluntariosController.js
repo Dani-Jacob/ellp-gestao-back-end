@@ -58,13 +58,13 @@ async function getVoluntarioById(req, res) {
 
 async function updateVoluntario(req, res) {
     const { id } = req.params;
-    const { nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento } = req.body;
+    const { nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento } = req.body;
 
     if ((await getVoluntarioById(id)).rows.length === 0) {
         return res.status(404).json({ message: "Voluntário não encontrado." });
     }
 
-    const result = await updateVoluntarioModel(id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento, id);
+    const result = await updateVoluntarioModel(id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento, id);
 
     res.status(200).json(result.rows[0]);
 }

@@ -42,8 +42,7 @@ const voluntarioValidator = [
     .isLength({ min: 8, max: 8 }).withMessage('CEP deve ter 8 caracteres.'),
 
   body('senha')
-    .notEmpty().withMessage('Senha é obrigatória.')
-    .isLength({ min: 6 }).withMessage('Senha deve ter no mínimo 6 caracteres.'),
+    .optional(),
 
   body('cargo_id')
     .optional()

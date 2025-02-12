@@ -84,7 +84,7 @@ async function getAllVoluntariosModel() {
 
 
 
-async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento) {
+async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento) {
     const result = await pool.query(`
         UPDATE voluntarios
         SET 
