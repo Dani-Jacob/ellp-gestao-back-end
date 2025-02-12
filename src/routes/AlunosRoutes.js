@@ -1,7 +1,12 @@
 import express from 'express';
 const router = express.Router();
 
-import {getAllAlunos, getAlunoById, updateAluno, deleteAluno, createAluno, getResponsaveisByAluno, getRespostasByAluno, addAlunoOficina, addFrequenciaAlunoAula, getFrequenciasAulasByAluno, addResponsavelAluno} from '../controllers/AlunosController.js';
+import {getAllAlunos, getAlunoById, updateAluno, 
+    deleteAluno, createAluno, getResponsaveisByAluno, 
+    getRespostasByAluno, addAlunoOficina, addFrequenciaAlunoAula, 
+    getFrequenciasAulasByAluno, addResponsavelAluno,addAlunosOficina
+} from '../controllers/AlunosController.js';
+
 import {authenticateToken} from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
@@ -36,6 +41,9 @@ router.delete('/:id',authenticateToken, checkPermission('delete_alunos'), IdVali
 
 //Adicionar um aluno em uma oficina
 router.post('/:id/oficina/oficina_id', authenticateToken, checkPermission('create_alunos'), IdValidator, oficinaIdValidator, addAlunoOficina); 
+
+//Adicionar varios alunos em uma oficina
+router.post('/oficina/:oficina_id', authenticateToken, checkPermission('create_alunos'), oficinaIdValidator, addAlunosOficina); 
 
 //Adicionar frequencia de um aluno em uma aula
 router.post('/:id/frequencia-aula/:aula_id', authenticateToken, checkPermission('create_alunos'), IdValidator, aulaIdValidator, addFrequenciaAlunoAula); 

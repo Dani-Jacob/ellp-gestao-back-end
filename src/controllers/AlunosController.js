@@ -1,4 +1,5 @@
 import pool from '../config/db.js';
+import GenericError from '../customErros/GenericError.js';
 
 import {
     getAlunoByCpfModel, 
@@ -12,7 +13,8 @@ import {
     addAlunoOficinaModel,
     addFrequenciaAlunoAulaModel,
     getFrequenciasAulasByAlunoModel,
-    addResponsavelAlunoModel
+    addResponsavelAlunoModel,
+    addAlunosOficinaModel
 } from '../models/AlunosModels.js';
 
 async function createAluno(req, res) { //OK
@@ -100,6 +102,25 @@ async function addAlunoOficina(req, res) { //Falta model de oficina
     res.status(201).json({"message": "Aluno adicionado na oficina com sucesso!"});
 }
 
+async function addAlunosOficina(req, res,next) {
+    const {oficina_id } = req.params;
+    const { alunos_ids }= req.body;
+
+
+    const result2 = await pool.query('SELECT * FROM oficinas WHERE id = $1', [oficina_id]);
+    if (result2.rows.length === 0) {
+        return res.status(404).json({ message: "Oficina não encontrada." });
+    }
+
+    let result3;
+    try{
+        result3 = await addAlunosOficinaModel(alunos_ids, oficina_id);
+    }catch(err){
+        return next(new GenericError(400, err.detail));
+    }
+    res.status(201).json(result3.rows);
+}
+
 async function addFrequenciaAlunoAula(req, res) { // Falta model de aulas
     const { id, aula_id } = req.params;
     
@@ -145,5 +166,6 @@ export {
     addAlunoOficina,
     addFrequenciaAlunoAula,
     getFrequenciasAulasByAluno,
-    addResponsavelAluno
+    addResponsavelAluno,
+    addAlunosOficina
 }
