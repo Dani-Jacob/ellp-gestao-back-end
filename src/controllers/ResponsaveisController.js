@@ -1,4 +1,3 @@
-import pool from '../config/db.js';
 
 import {
     createResponsavelModel,
@@ -10,11 +9,11 @@ import {
 } from '../models/ResponsaveisModels.js';
 
 async function createResponsavel(req, res) {
-    const { nome, telefone, cpf, email, tipo_parentesco, id_aluno } = req.body;
+    const { nome, telefone, cpf, email, tipo_parentesco } = req.body;
     if ((await getResponsavelByCpfModel(cpf)).rows.length > 0) {
         return res.status(400).json({ message: "Já existe um responsável com esse CPF." });
     }
-    const result = await createResponsavelModel( nome, telefone, cpf, email, tipo_parentesco, id_aluno)
+    const result = await createResponsavelModel( nome, telefone, cpf, email, tipo_parentesco)
     res.status(201).json(result.rows[0]); 
 }
 

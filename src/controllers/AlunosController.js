@@ -11,7 +11,8 @@ import {
     getRespostasByAlunoModel, 
     addAlunoOficinaModel,
     addFrequenciaAlunoAulaModel,
-    getFrequenciasAulasByAlunoModel
+    getFrequenciasAulasByAlunoModel,
+    addResponsavelAlunoModel
 } from '../models/AlunosModels.js';
 
 async function createAluno(req, res) { //OK
@@ -127,6 +128,11 @@ async function getFrequenciasAulasByAluno(req, res) {
     res.status(200).json(result2.rows);
 }
 
+async function addResponsavelAluno(req, res) {
+    const { id, responsavel_id } = req.params;
+    const result = await addResponsavelAlunoModel(id, responsavel_id);
+    res.status(201).json(result.rows);
+}
 
 export {
     getAllAlunos,
@@ -138,5 +144,6 @@ export {
     getRespostasByAluno,
     addAlunoOficina,
     addFrequenciaAlunoAula,
-    getFrequenciasAulasByAluno
+    getFrequenciasAulasByAluno,
+    addResponsavelAluno
 }

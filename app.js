@@ -15,6 +15,8 @@ import aulasRoutes from './src/routes/AulasRoutes.js';
 import cargosRoutes from './src/routes/CargosRoutes.js';
 import departamentosRoutes from './src/routes/DepartamentosRoutes.js';
 import atividadesRoutes from './src/routes/AtividadesRoutes.js';
+import perguntasRoutes from './src/routes/PerguntasRoutes.js';
+import respostasRoutes from './src/routes/RespostasRoutes.js';
 //Middlewares
 import getErrorsMidleware from './src/middlewares/GetErrorsMiddleware.js';
 
@@ -39,7 +41,8 @@ app.use('/aulas', aulasRoutes);
 app.use('/cargos', cargosRoutes);
 app.use('/departamentos', departamentosRoutes);
 app.use('/atividades', atividadesRoutes);
-
+app.use('/perguntas',perguntasRoutes);
+app.use('/respostas',respostasRoutes);
 
 
 app.use(getErrorsMidleware);

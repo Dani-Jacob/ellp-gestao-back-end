@@ -128,6 +128,16 @@ async function getFrequenciasAulasByAlunoModel(id) {
     return result2;
 }
 
+async function addResponsavelAlunoModel(aluno_id, responsavel_id){
+    const result2 = await pool.query(
+        `
+        INSERT INTO responsaveis_alunos (responsavel_id, aluno_id)
+        VALUES($1,$2)
+        RETURNING *
+        `, [responsavel_id, aluno_id]);
+    return result2;
+}
+
 export {
     getAlunoByCpfModel,
     getAlunoByIdModel,
@@ -139,5 +149,6 @@ export {
     getRespostasByAlunoModel,
     addAlunoOficinaModel,
     addFrequenciaAlunoAulaModel,
-    getFrequenciasAulasByAlunoModel
+    getFrequenciasAulasByAlunoModel,
+    addResponsavelAlunoModel
 }

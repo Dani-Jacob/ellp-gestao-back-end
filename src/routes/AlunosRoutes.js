@@ -1,13 +1,13 @@
 import express from 'express';
 const router = express.Router();
 
-import {getAllAlunos, getAlunoById, updateAluno, deleteAluno, createAluno, getResponsaveisByAluno, getRespostasByAluno, addAlunoOficina, addFrequenciaAlunoAula, getFrequenciasAulasByAluno} from '../controllers/AlunosController.js';
+import {getAllAlunos, getAlunoById, updateAluno, deleteAluno, createAluno, getResponsaveisByAluno, getRespostasByAluno, addAlunoOficina, addFrequenciaAlunoAula, getFrequenciasAulasByAluno, addResponsavelAluno} from '../controllers/AlunosController.js';
 import {authenticateToken} from '../controllers/AuthController.js';
 import checkPermission from '../middlewares/CheckPermissionMiddleware.js';
 
 //Validacoes
 import {alunoValidator} from '../validators/AlunosValidator.js';
-import {IdValidator, aulaIdValidator, oficinaIdValidator} from '../validators/GenericValidator.js';
+import {IdValidator, aulaIdValidator, oficinaIdValidator,responsavelIdValidator} from '../validators/GenericValidator.js';
 
 
 //Criar aluno
@@ -39,5 +39,8 @@ router.post('/:id/oficina/oficina_id', authenticateToken, checkPermission('creat
 
 //Adicionar frequencia de um aluno em uma aula
 router.post('/:id/frequencia-aula/:aula_id', authenticateToken, checkPermission('create_alunos'), IdValidator, aulaIdValidator, addFrequenciaAlunoAula); 
+
+//Adicionar um responsavel a um aluno
+router.post('/:id/addResponsavel/:responsavel_id',authenticateToken, checkPermission('create_alunos'), IdValidator, responsavelIdValidator, addResponsavelAluno)
 
 export default router;
