@@ -60,7 +60,7 @@ async function updateVoluntario(req, res) {
     const { id } = req.params;
     const { nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento } = req.body;
 
-    if ((await getVoluntarioById(id)).rows.length === 0) {
+    if ((await getVoluntarioByIdModel(id)).rows.length === 0) {
         return res.status(404).json({ message: "Voluntário não encontrado." });
     }
 
@@ -74,6 +74,7 @@ async function deleteVoluntario(req, res) {
 
     if ((await getVoluntarioByIdModel(id)).rows.length === 0) {
         return res.status(404).json({ message: "Voluntário não encontrado." });
+        
     }
 
     await deleteVoluntarioModel(id);

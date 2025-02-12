@@ -98,12 +98,13 @@ async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, a
             endereco = $8,
             bairro = $9,
             cep = $10,
-            cargo_id = $12,
-            id_departamento = $13
-        WHERE id = $14
+            cargo_id = $11,
+            id_departamento = $12
+        WHERE id = $13
         RETURNING id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento;
 
-    `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento, id]);
+    `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento, id]);
+
 
     return result;
 }
