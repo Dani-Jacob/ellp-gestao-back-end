@@ -4,7 +4,7 @@ import argon2 from 'argon2';
 async function getVoluntarioByIdModel(id) {
     const result = await pool.query(`
         SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
-       v.endereco, v.bairro, v.cep, v.senha, v.data_cadastro, 
+       v.endereco, v.bairro, v.cep, v.data_cadastro, 
        c.id AS id_cargo, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
         FROM voluntarios v
@@ -16,12 +16,46 @@ async function getVoluntarioByIdModel(id) {
 }
 
 async function getVoluntarioByCpfModel(cpf) {
-    const result = await pool.query('SELECT * FROM voluntarios WHERE cpf = $1', [cpf]);
+    const result = await pool.query(`
+        SELECT 
+            id, 
+            nome, 
+            ra, 
+            telefone, 
+            cpf, 
+            email, 
+            curso, 
+            ativo, 
+            endereco, 
+            bairro, 
+            cep, 
+            data_cadastro, 
+            cargo_id, 
+            id_departamento
+        FROM voluntarios
+    WHERE cpf = $1`, [cpf]);
     return result;
 }
 
 async function getVoluntarioByEmailModel(email) {
-    const result = await pool.query('SELECT * FROM voluntarios WHERE email = $1', [email]);
+    const result = await pool.query(`
+        SELECT 
+            id, 
+            nome, 
+            ra, 
+            telefone, 
+            cpf, 
+            email, 
+            curso, 
+            ativo, 
+            endereco, 
+            bairro, 
+            cep, 
+            data_cadastro, 
+            cargo_id, 
+            id_departamento
+        FROM voluntarios
+        WHERE email = $1`, [email]);
     return result;
 }
 
@@ -31,7 +65,7 @@ async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativ
             nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-        RETURNING *
+        RETURNING id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento;
     `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento]);
 
     return result;
@@ -39,7 +73,7 @@ async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativ
 
 async function getAllVoluntariosModel() {
     const result = await pool.query(`SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
-       v.endereco, v.bairro, v.cep, v.senha, v.data_cadastro, 
+       v.endereco, v.bairro, v.cep, v.data_cadastro, 
        c.id AS id_cargo, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
         FROM voluntarios v
@@ -60,15 +94,15 @@ async function updateVoluntarioModel(id,nome, ra, telefone, cpf, email, curso, a
             cpf = $4,
             email = $5,
             curso = $6,
-            ativo = $7
+            ativo = $7,
             endereco = $8,
             bairro = $9,
             cep = $10,
-            senha = $11,
             cargo_id = $12,
             id_departamento = $13
         WHERE id = $14
-        RETURNING *
+        RETURNING id, nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, cargo_id, id_departamento;
+
     `, [nome, ra, telefone, cpf, email, curso, ativo, endereco, bairro, cep, senha, cargo_id, id_departamento, id]);
 
     return result;
