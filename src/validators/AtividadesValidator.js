@@ -8,7 +8,7 @@ const atividadesValidator = [
         .isString().withMessage('O nome da atividade deve ser uma string'),
 
     body('data_atividade')
-        .isDate().withMessage('A data da atividade deve ser uma data válida')
+        .isDate({ format: 'DD/MM/YYYY' }).withMessage('A data da atividade deve ser uma data válida')
         .notEmpty().withMessage('A data da atividade é obrigatória'),
 
     body('observacao')
