@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 
 async function getVoluntarioByIdModel(id) {
     const result = await pool.query(`
-        SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
+        SELECT v.id AS id_voluntario, v.nome AS nome, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
        v.endereco, v.bairro, v.cep, v.data_cadastro, 
        c.id AS cargo_id, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
@@ -72,7 +72,7 @@ async function createVoluntarioModel(nome, ra, telefone, cpf, email, curso, ativ
 }
 
 async function getAllVoluntariosModel() {
-    const result = await pool.query(`SELECT v.id AS id_voluntario, v.nome AS nome_voluntario, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
+    const result = await pool.query(`SELECT v.id AS id_voluntario, v.nome AS nome, v.ra, v.telefone, v.cpf, v.email, v.curso, v.ativo, 
        v.endereco, v.bairro, v.cep, v.data_cadastro, 
        c.id AS cargo_id, c.nome AS nome_cargo, 
        d.id AS id_departamento, d.nome AS nome_departamento
