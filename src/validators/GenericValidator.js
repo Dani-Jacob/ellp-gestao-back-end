@@ -29,10 +29,24 @@ const oficinaIdValidator = [
     validationResultMiddleware
 ];
 
+const responsavelIdValidator = [
+    param('responsavel_id').isInt({ min: 0 }).withMessage('O ID deve ser um número inteiro positivo'),
+    
+    validationResultMiddleware
+];
+
+const perguntaIdValidator = [
+    param('pergunta_id').isInt({ min: 0 }).withMessage('O ID deve ser um número inteiro positivo'),
+    
+    validationResultMiddleware
+];
+
 
 export {
     paginationValidator,
     IdValidator,
     aulaIdValidator,
-    oficinaIdValidator
+    oficinaIdValidator,
+    responsavelIdValidator,
+    perguntaIdValidator
 };

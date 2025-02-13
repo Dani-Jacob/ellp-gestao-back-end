@@ -2,7 +2,7 @@ import pool from '../config/db.js';
 
 
 
-async function createResponsavelModel(nome, telefone, cpf, email, tipo_parentesco, id_aluno) {
+async function createResponsavelModel(nome, telefone, cpf, email, tipo_parentesco) {
     const result = await pool.query(`
             INSERT INTO responsaveis (
                 nome, 
@@ -14,11 +14,6 @@ async function createResponsavelModel(nome, telefone, cpf, email, tipo_parentesc
             VALUES ($1, $2, $3, $4, $5) 
             RETURNING *
         `, [nome, telefone, cpf, email, tipo_parentesco]);
-    const result2 = await pool.query(
-        `
-        INSERT INTO responsaveis_alunos (responsavel_id, aluno_id)
-        VALUES(${result.rows[0].id},$1)
-        `, [id_aluno]);
     return result;
 }
 
@@ -53,7 +48,7 @@ async function deleteResponsavelModel(id) {
     return result;
 }
 
-async function getResponsavelByCpfModel(cpd) {
+async function getResponsavelByCpfModel(cpf) {
     const result = await pool.query('SELECT * FROM responsaveis WHERE cpf = $1', [cpf]);
     return result;
 }

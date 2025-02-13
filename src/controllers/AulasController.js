@@ -1,4 +1,3 @@
-import pool from "../config/db.js";
 
 import {
     getAulaByIdModel,
@@ -13,7 +12,7 @@ import {
 async function createAula(req, res){
     const {data_aula, oficina_id, horas} = req.body;
     const result = createAulaModel(data_aula, oficina_id, horas);
-    res.status(201).json(result.rows[0]);
+    res.status(201).json(result.rows);
 }
 
 

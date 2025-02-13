@@ -104,6 +104,24 @@ async function addAlunoOficinaModel(id, oficina_id) {
     return result;
 }
 
+async function addAlunosOficinaModel(alunos_id, oficina_id) {
+    let values = "";
+    for (let i = 0 ; i < alunos_id.length ; i++){
+        if(i == alunos_id.length-1){
+            values+= `(${oficina_id},${alunos_id[i]})`;
+        }else{
+            values+= `(${oficina_id},${alunos_id[i]}),`; 
+        }
+    }
+    console.log(values);
+    const result = await pool.query(`
+        INSERT INTO 
+        oficinas_alunos (oficina_id, aluno_id) 
+        VALUES ${values}
+        RETURNING *`);
+    return result;
+}
+
 async function addFrequenciaAlunoAulaModel(id, aula_id) {
     const result = await pool.query('INSERT INTO frequencia_alunos_aulas (aluno_id, aula_id) VALUES($1,$2)', [id, aula_id]);
 
@@ -128,6 +146,16 @@ async function getFrequenciasAulasByAlunoModel(id) {
     return result2;
 }
 
+async function addResponsavelAlunoModel(aluno_id, responsavel_id){
+    const result2 = await pool.query(
+        `
+        INSERT INTO responsaveis_alunos (responsavel_id, aluno_id)
+        VALUES($1,$2)
+        RETURNING *
+        `, [responsavel_id, aluno_id]);
+    return result2;
+}
+
 export {
     getAlunoByCpfModel,
     getAlunoByIdModel,
@@ -139,5 +167,7 @@ export {
     getRespostasByAlunoModel,
     addAlunoOficinaModel,
     addFrequenciaAlunoAulaModel,
-    getFrequenciasAulasByAlunoModel
+    getFrequenciasAulasByAlunoModel,
+    addResponsavelAlunoModel,
+    addAlunosOficinaModel
 }
